@@ -33,3 +33,11 @@ export async function createUser(username, email, password, dateCreated) {
     const insertedId = result.insertId;
     return await getUserByID(insertedId);
 }
+
+export async function login(username, password) {
+    const [rows] = await pool.query(`
+CALL LOGIN_PRC(?, ?);
+    `, [username, password]);
+
+    return rows[0];
+}
