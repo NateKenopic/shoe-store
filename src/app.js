@@ -52,7 +52,8 @@ app.use(cors(corsOptions));
 app.use(compression());
 
 // Set up our passport authentication middleware
-passport.use(authenticate.strategy());
+// passport.use('shoeauth',authenticate.strategy());
+passport.use('shoeauth', authenticate.strategy);
 app.use(passport.initialize());
 
 /**
@@ -79,18 +80,19 @@ app.post(`/login`, async (req, res) => {
   // }).catch((err) => {
   //     res.status(422).json({ message: JSON.stringify(err) });
   // });
-
   let user = await login(req.body.username, req.body.password);
 
   if (user.length == 0 || user[0].result == false) {
-    logger.warn("Login failed for ", req.body.username);
+    logger.warn("Login failed for " + req.body.username);
     return res.status(401).send("Invalid username or password");
   }
 
   if (user[0].result == 'true') {
-    logger.info("Login successful for ", req.body.username);
+    logger.info("Login successful for " + req.body.username);
     var payload = {
-      id: user.userid,
+      "id": user[0].userid,
+      "username": user[0].username,
+      "email": user[0].email,
     };
 
     var token = jwt.sign(payload, process.env.JWT_SECRET);
