@@ -77,9 +77,6 @@ async function login(username, password) {
     if (canLogin == true) {
         const [rows] = await pool.query(`CALL LOGIN_PRC(?, ?);`, [username, user.password]);
 
-        console.log(username + ' has logged in successfully');
-        console.log(rows[0]);
-
         return rows[0];
     } else {
         throw new Error('Could not login. Incorrect password for ' + username);
