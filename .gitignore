@@ -134,5 +134,3 @@ dist
 
 # Don't include coverage/ since it's a generate folder
 coverage/
-
-env.jest
