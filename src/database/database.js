@@ -1,9 +1,11 @@
-import mysql from 'mysql2';
+// import mysql from 'mysql2';
+const mysql = require('mysql2');
 
-import bcrypt from 'bcrypt';
+// import bcrypt from 'bcrypt';
+const bcrypt = require('bcrypt');
 
-import dotenv from 'dotenv';
-dotenv.config();
+// import dotenv from 'dotenv';
+// dotenv.config();
 
 const pool = mysql.createPool({
     host: process.env.MYSQL_HOST,
@@ -13,17 +15,17 @@ const pool = mysql.createPool({
     database: process.env.MYSQL_DATABASE
 }).promise();
 
-export async function getUsers() {
+async function getUsers() {
     const [rows] = await pool.query("SELECT * FROM users");
     return rows;
 }
 
-export async function getShoes() {
+async function getShoes() {
     const [rows] = await pool.query("SELECT * FROM z_shoes");
     return rows;
 }
 
-export async function getUserByID(id) {
+async function getUserByID(id) {
     const [rows] = await pool.query(`
     SELECT * 
     FROM users
@@ -32,7 +34,7 @@ export async function getUserByID(id) {
     return rows[0];
 }
 
-export async function getUserByUsername(username) {
+async function getUserByUsername(username) {
     const [rows] = await pool.query(`
     SELECT * 
     FROM users
@@ -41,7 +43,7 @@ export async function getUserByUsername(username) {
     return rows[0];
 }
 
-export async function createUser(username, email, password, dateCreated) {
+async function createUser(username, email, password, dateCreated) {
     try {
         const user = await getUserByUsername(username);
         if (user !== undefined) throw new Error('User already exists');
@@ -58,7 +60,7 @@ export async function createUser(username, email, password, dateCreated) {
     }
 }
 
-export async function login(username, password) {
+async function login(username, password) {
     try {
     const user = await getUserByUsername(username);
     if (user === undefined) throw new Error('User does not exist with this username');
@@ -76,6 +78,7 @@ export async function login(username, password) {
         const [rows] = await pool.query(`CALL LOGIN_PRC(?, ?);`, [username, user.password]);
 
         console.log(username + ' has logged in successfully');
+        console.log(rows[0]);
 
         return rows[0];
     } else {
@@ -85,4 +88,13 @@ export async function login(username, password) {
         console.error(e.message);
         return [];
     }
+}
+
+module.exports = {
+    getUsers,
+    getUserByID,
+    getUserByUsername,
+    getShoes,
+    login,
+    createUser
 }

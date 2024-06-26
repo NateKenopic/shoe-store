@@ -21,6 +21,9 @@ const app = express();
 
 const { createErrorResponse } = require('./response');
 
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
+
 // Use pino logging middleware
 app.use(pino);
 
