@@ -1,15 +1,14 @@
 // src/routes/index.js
 
-const express = require("express");
+const express = require('express');
 
 // version and author from package.json
-const { version, author } = require("../../package.json");
-const { authenticate } = require("../auth");
+const { version, author } = require('../../package.json');
+const { authenticate } = require('../auth');
 
-const { createSuccessResponse } = require("../response");
+const { createSuccessResponse } = require('../response');
 
-const { hostname } = require("os");
-
+const { hostname } = require('os');
 
 // Create a router that we can use to mount our API
 const router = express.Router();
@@ -24,16 +23,16 @@ router.use(`/v1`, authenticate(), require('./api'));
  * Define a simple health check route. If the server is running
  * we'll respond with a 200 OK.  If not, the server isn't healthy.
  */
-router.get("/", (req, res) => {
+router.get('/', (req, res) => {
   // Client's shouldn't cache this response (always request it fresh)
-  res.setHeader("Cache-Control", "no-cache");
+  res.setHeader('Cache-Control', 'no-cache');
   // Send a 200 'OK' response
   const data = createSuccessResponse({ author, version });
 
   res.status(200).json({
     ...data,
     // Use your own GitHub URL for this!
-    githubUrl: "https://github.com/NateKenopic/shoe-store",
+    githubUrl: 'https://github.com/NateKenopic/shoe-store',
     hostname: hostname(),
   });
 });

@@ -21,14 +21,13 @@ const app = express();
 
 const { createErrorResponse } = require('./response');
 
+const jwt = require('jsonwebtoken');
 
-const jwt = require("jsonwebtoken");
-
-const { login, createUser } = require("./database/database");
+const { login, createUser } = require('./database/database');
 
 const saltRounds = 10;
 
-const bcrypt = require("bcrypt");
+const bcrypt = require('bcrypt');
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -83,21 +82,25 @@ app.post(`/login`, async (req, res) => {
   let user = await login(req.body.username, req.body.password);
 
   if (user.length == 0 || user[0].result == false) {
-    logger.warn("Login failed for " + req.body.username);
-    return res.status(401).send("Invalid username or password");
+    logger.warn('Login failed for ' + req.body.username);
+    return res.status(401).send('Invalid username or password');
   }
 
   if (user[0].result == 'true') {
-    logger.info("Login successful for " + req.body.username);
+    logger.info('Login successful for ' + req.body.username);
     var payload = {
-      "id": user[0].userid,
-      "username": user[0].username,
-      "email": user[0].email,
+      id: user[0].userid,
+      username: user[0].username,
+      email: user[0].email,
     };
 
     var token = jwt.sign(payload, process.env.JWT_SECRET);
 
-    res.status(200).json({ message: "login successful", token: token, userid: user[0].userid });
+    res.status(200).json({
+      message: 'login successful',
+      token: token,
+      userid: user[0].userid,
+    });
   }
 });
 
@@ -119,15 +122,10 @@ app.post(`/signup`, async (req, res) => {
 
   let currDate = new Date();
 
-  const resData = await createUser(
-    req.body.username,
-    req.body.email,
-    pw,
-    currDate
-  );
+  const resData = await createUser(req.body.username, req.body.email, pw, currDate);
   if (resData.length == 0) {
-    console.log("Signup failed for ", req.body.username);
-    return res.status(401).send("Signup failed for " + req.body.username);
+    console.log('Signup failed for ', req.body.username);
+    return res.status(401).send('Signup failed for ' + req.body.username);
   }
 
   res.json(resData);

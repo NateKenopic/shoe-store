@@ -2,17 +2,17 @@
 
 module.exports.createSuccessResponse = function (data) {
   return {
-    status: "ok",
+    status: 'ok',
     ...data,
   };
 };
 
 module.exports.createErrorResponse = function (code, message) {
   return {
-    status: "error",
+    status: 'error',
     error: {
       code: code || -1,
-      message: message || "invalid request, missing message ...",
+      message: message || 'invalid request, missing message ...',
     },
   };
 };

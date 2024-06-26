@@ -7,7 +7,7 @@
 // const passport = require('passport');
 //const authPassport = require('http-auth-passport');
 
-const passportJWT = require("passport-jwt");
+const passportJWT = require('passport-jwt');
 
 var ExtractJwt = passportJWT.ExtractJwt;
 var JwtStrategy = passportJWT.Strategy;
@@ -35,7 +35,7 @@ jwtOptions.secretOrKey = process.env.JWT_SECRET;
 // });
 
 // We'll use our authorize middle module
-const authorize = require("./auth-middleware");
+const authorize = require('./auth-middleware');
 
 // module.exports.strategy = () =>
 //   // For our Passport authentication strategy, we'll look for a
@@ -67,25 +67,30 @@ const authorize = require("./auth-middleware");
 //   return pstrategy;
 // };
 
-module.exports.strategy = new JwtStrategy({ jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(), secretOrKey: process.env.JWT_SECRET}, function (jwt_payload, next) {
-    console.log("payload received: " + JSON.stringify(jwt_payload));
+module.exports.strategy = new JwtStrategy(
+  {
+    jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+    secretOrKey: process.env.JWT_SECRET,
+  },
+  function (jwt_payload, next) {
+    console.log('payload received: ' + JSON.stringify(jwt_payload));
 
     if (jwt_payload) {
       next(null, {
         _id: jwt_payload.id,
         email: jwt_payload.email,
-        username: jwt_payload.username
+        username: jwt_payload.username,
         //password: jwt_payload.password,
       });
     } else {
       next(null, false);
     }
-  });
-
+  }
+);
 
 // Old authenticate()
 //module.exports.authenticate = () => passport.authenticate('http', { session: false });
 
 // Now we'll delegate the authorization to our authorize middleware
 //module.exports.authenticate = () => authorize("http");
-module.exports.authenticate = () => authorize("shoeauth");
+module.exports.authenticate = () => authorize('shoeauth');
