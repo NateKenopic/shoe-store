@@ -1,6 +1,6 @@
 {
   "name": "shoe-store",
-  "version": "1.2.2",
+  "version": "1.2.3",
   "description": "Back-End API for Shoe Store using NodeJS and MySQL",
   "main": "database.js",
   "scripts": {
