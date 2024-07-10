@@ -4,9 +4,6 @@ const mysql = require('mysql2');
 // import bcrypt from 'bcrypt';
 const bcrypt = require('bcrypt');
 
-// import dotenv from 'dotenv';
-// dotenv.config();
-
 const pool = mysql
   .createPool({
     host: process.env.MYSQL_HOST,
